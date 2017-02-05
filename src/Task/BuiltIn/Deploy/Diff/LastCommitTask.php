@@ -1,5 +1,6 @@
 <?php
 namespace Mage\Task\BuiltIn\Deploy\Diff;
+
 /**
  * Created by PhpStorm.
  * User: jbolys
@@ -20,8 +21,11 @@ class LastCommitTask extends \Mage\Task\AbstractTask
 
     public function execute()
     {
-        $this->runtime->setEnvOption('from', 'dc48f19b265150c4cc584cf6c0726d7cb78cef17');
+        $process = $this->runtime->runRemoteCommand('cat .mage-deployment.log', false);
 
-        return true;
+        $lastDeployedHash = $process->getOutput();
+        $this->runtime->setEnvOption('from', $lastDeployedHash);
+
+        return $process->isSuccessful();
     }
 }
