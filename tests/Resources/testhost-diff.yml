@@ -1,0 +1,21 @@
+magephp:
+    log_dir: /tmp
+    environments:
+        test:
+            strategy: Diff
+            user: tester
+            branch: test
+            host_path: /var/www/test
+            hosts:
+                - testhost
+            pre-deploy:
+                - git/update
+                - deploy/last-commit
+                - git/extract-diff
+                - composer/install
+            on-deploy:
+                - deploy/diff-upload
+            on-release:
+            post-release:
+            post-deploy:
+                - deploy/update-last-commit

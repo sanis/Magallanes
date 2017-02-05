@@ -15,8 +15,6 @@ use Symfony\Component\Process\Process;
 
 class DiffTask extends AbstractTask
 {
-    private $diff = [];
-
     public function getName()
     {
         return 'git/extract-diff';
@@ -33,6 +31,10 @@ class DiffTask extends AbstractTask
 
     public function execute()
     {
+        $deployPath = './.mage-deployment';
+        $this->runtime->runLocalCommand('rm -rf '.$deployPath);
+        $this->runtime->runLocalCommand('mkdir '.$deployPath);
+
         $options = $this->getOptions();
 
         $cmdGetDiff = sprintf('%s diff %s %s --name-status', $options['path'], $options['from'], $options['to']);
@@ -42,22 +44,22 @@ class DiffTask extends AbstractTask
         if ($process->isSuccessful()) {
             $diffOutput = $process->getOutput();
             preg_match_all('/(?\'change\'\w)\s+(?\'file\'.+)/m', $diffOutput, $matches, PREG_SET_ORDER);
-            $diff = [];
+            $diff = ['changed' => [], 'deleted' => []];
             foreach ($matches as $match) {
-                $diff[] = ['change' => $match['change'], 'file' => $match['file']];
+                if ($match['change'] == 'D') {
+                    $diff['deleted'][]= $match['file'];
+                } else {
+                    $diff['changed'][] = $match['file'];
+                }
             }
-            $this->diff = $diff;
+
+            $diffChanged = implode("\n", $diff['changed']);
+            $diffDeleted = implode("\n", $diff['deleted']);
+            $this->runtime->runLocalCommand("echo \"{$diffChanged}\" >> {$deployPath}/diff_changed.txt");
+            $this->runtime->runLocalCommand("echo \"{$diffDeleted}\" >> {$deployPath}/diff_deleted.txt");
         }
 
         return $process->isSuccessful();
-    }
-
-    /**
-     * @return array
-     */
-    public function getDiff(): array
-    {
-        return $this->diff;
     }
 
     protected function getOptions()

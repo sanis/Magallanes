@@ -10,6 +10,7 @@
 
 namespace Mage\Runtime;
 
+use Mage\Deploy\Strategy\DiffStrategy;
 use Mage\Deploy\Strategy\ReleasesStrategy;
 use Mage\Deploy\Strategy\RsyncStrategy;
 use Mage\Deploy\Strategy\StrategyInterface;
@@ -492,6 +493,10 @@ class Runtime
 
         if ($this->getEnvOption('releases', false)) {
             $strategy = new ReleasesStrategy();
+        }
+
+        if ($this->getEnvOption('strategy') == 'Diff') {
+            $strategy = new DiffStrategy();
         }
 
         $strategy->setRuntime($this);

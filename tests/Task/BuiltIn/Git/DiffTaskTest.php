@@ -34,45 +34,12 @@ class DiffTaskTest extends \PHPUnit_Framework_TestCase
         $task->execute();
 
         $this->assertEquals(
-            [
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Runtime/Runtime.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Task/BuiltIn/Composer/DumpAutoloadTask.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Task/BuiltIn/Composer/InstallTask.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Task/BuiltIn/Symfony/AsseticDumpTask.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Task/BuiltIn/Symfony/AssetsInstallTask.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Task/BuiltIn/Symfony/CacheClearTask.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'src/Task/BuiltIn/Symfony/CacheWarmupTask.php',
-                ],
-                [
-                    'change' => 'M',
-                    'file'   => 'tests/Command/BuiltIn/DeployCommandMiscTasksTest.php',
-                ],
-                [
-                    'change' => 'A',
-                    'file'   => 'tests/Resources/composer-env.yml',
-                ],
-            ],
-            $task->getDiff()
+            "echo \"src/Runtime/Runtime.php\nsrc/Task/BuiltIn/Composer/DumpAutoloadTask.php\nsrc/Task/BuiltIn/Composer/InstallTask.php\nsrc/Task/BuiltIn/Symfony/AsseticDumpTask.php\nsrc/Task/BuiltIn/Symfony/AssetsInstallTask.php\nsrc/Task/BuiltIn/Symfony/CacheClearTask.php\nsrc/Task/BuiltIn/Symfony/CacheWarmupTask.php\ntests/Command/BuiltIn/DeployCommandMiscTasksTest.php\ntests/Resources/composer-env.yml\" >> ./.mage-deployment/diff_changed.txt",
+            $runtime->getRanCommands()[3]
+        );
+        $this->assertEquals(
+            "echo \"\" >> ./.mage-deployment/diff_deleted.txt",
+            $runtime->getRanCommands()[4]
         );
     }
 

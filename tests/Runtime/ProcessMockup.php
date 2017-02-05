@@ -92,7 +92,7 @@ class ProcessMockup extends Process
             return '';
         }
 
-        if ($this->commandline == 'git diff dc48f19b265150c4cc584cf6c0726d7cb78cef17 532a3146b07ea9eeeaf979e8b0228c4d0d4895d3 --name-status') {
+        if ($this->commandline == 'git diff dc48f19b265150c4cc584cf6c0726d7cb78cef17 532a3146b07ea9eeeaf979e8b0228c4d0d4895d3 --name-status' || $this->commandline = 'git diff dc48f19b265150c4cc584cf6c0726d7cb78cef17 HEAD --name-status') {
             return "M src/Runtime/Runtime.php\nM src/Task/BuiltIn/Composer/DumpAutoloadTask.php\nM src/Task/BuiltIn/Composer/InstallTask.php\nM src/Task/BuiltIn/Symfony/AsseticDumpTask.php\nM src/Task/BuiltIn/Symfony/AssetsInstallTask.php\nM src/Task/BuiltIn/Symfony/CacheClearTask.php\nM src/Task/BuiltIn/Symfony/CacheWarmupTask.php\nM tests/Command/BuiltIn/DeployCommandMiscTasksTest.php\nA tests/Resources/composer-env.yml";
         }
 
