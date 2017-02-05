@@ -105,17 +105,20 @@ class DeployCommandWithoutReleasesTest extends TestCase
         $ranCommands = $application->getRuntime()->getRanCommands();
 
         $testCase = array(
-            0 => 'git branch | grep "*"',
-            1 => 'git checkout test',
-            2 => 'git pull',
-            3 => 'rm -rf ./.mage-deployment',
-            4 => 'mkdir ./.mage-deployment',
-            5 => 'git diff dc48f19b265150c4cc584cf6c0726d7cb78cef17 HEAD --name-status',
-            6 => "echo \"src/Runtime/Runtime.php\nsrc/Task/BuiltIn/Composer/DumpAutoloadTask.php\nsrc/Task/BuiltIn/Composer/InstallTask.php\nsrc/Task/BuiltIn/Symfony/AsseticDumpTask.php\nsrc/Task/BuiltIn/Symfony/AssetsInstallTask.php\nsrc/Task/BuiltIn/Symfony/CacheClearTask.php\nsrc/Task/BuiltIn/Symfony/CacheWarmupTask.php\ntests/Command/BuiltIn/DeployCommandMiscTasksTest.php\ntests/Resources/composer-env.yml\" >> ./.mage-deployment/diff_changed.txt",
-            7 => 'echo "" >> ./.mage-deployment/diff_deleted.txt',
-            8 => 'composer install --optimize-autoloader',
-            9 => 'rsync -e "ssh -p 22 -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" -avz --exclude=.git --files-from=./.mage-deployment/diff_changed.txt ./ tester@testhost:/var/www/test',
-            10 => 'git checkout master',
+            'git branch | grep "*"',
+            'git checkout test',
+            'git pull',
+            'ssh -p 22 -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tester@ sh -c \"cat .mage-deployment.log\"',
+            'rm -rf ./.mage-deployment',
+            'mkdir ./.mage-deployment',
+            'git diff LASTCOMMITHASH HEAD --name-status',
+            "echo \"src/Runtime/Runtime.php\nsrc/Task/BuiltIn/Composer/DumpAutoloadTask.php\nsrc/Task/BuiltIn/Composer/InstallTask.php\nsrc/Task/BuiltIn/Symfony/AsseticDumpTask.php\nsrc/Task/BuiltIn/Symfony/AssetsInstallTask.php\nsrc/Task/BuiltIn/Symfony/CacheClearTask.php\nsrc/Task/BuiltIn/Symfony/CacheWarmupTask.php\ntests/Command/BuiltIn/DeployCommandMiscTasksTest.php\ntests/Resources/composer-env.yml\" >> ./.mage-deployment/diff_changed.txt",
+            'echo "" >> ./.mage-deployment/diff_deleted.txt',
+            'composer install --optimize-autoloader',
+            'rsync -e "ssh -p 22 -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" -avz --exclude=.git --files-from=./.mage-deployment/diff_changed.txt ./ tester@testhost:/var/www/test',
+            'git rev-parse --verify HEAD',
+            'ssh -p 22 -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tester@ sh -c \"echo \"NEWLASTCOMMITHASH\" >> .mage-deployment.log\"',
+            'git checkout master',
         );
 
         // Check total of Executed Commands
