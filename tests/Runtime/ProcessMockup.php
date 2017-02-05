@@ -100,6 +100,10 @@ class ProcessMockup extends Process
             return 'LASTCOMMITHASH';
         }
 
+        if ($this->commandline == 'git rev-parse --verify HEAD') {
+            return 'NEWLASTCOMMITHASH';
+        }
+
         return '';
     }
 }

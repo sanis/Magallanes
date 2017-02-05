@@ -1,5 +1,6 @@
 <?php
 namespace Mage\Task\BuiltIn\Deploy\Diff;
+
 /**
  * Created by PhpStorm.
  * User: jbolys
@@ -20,6 +21,11 @@ class UpdateLastCommitTask extends \Mage\Task\AbstractTask
 
     public function execute()
     {
-        return true;
+        $process  = $this->runtime->runLocalCommand('git rev-parse --verify HEAD');
+        $lastHash = $process->getOutput();
+
+        $process = $this->runtime->runRemoteCommand("echo \"{$lastHash}\" >> .mage-deployment.log", false);
+
+        return $process->isSuccessful();
     }
 }
