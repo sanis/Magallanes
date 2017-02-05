@@ -6,7 +6,7 @@ namespace Mage\Task\BuiltIn\Deploy\Diff;
  * Date: 05/02/2017
  * Time: 12:50
  */
-class LastCommitTask extends \Mage\Task\AbstractTask
+class UpdateLastCommitTask extends \Mage\Task\AbstractTask
 {
     public function getName()
     {
